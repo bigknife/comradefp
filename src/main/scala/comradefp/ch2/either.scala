@@ -10,12 +10,21 @@ object Either {
   def left[E, A](e: E): Either[E, A]  = Left(e)
   def right[E, A](a: A): Either[E, A] = Right(a)
 
+  object syntax {
+    implicit def eitherSyntax[A](a: A): EitherSyntax[A] = new EitherSyntax(a)
+  }
+
   object ops {
     implicit def eitherOps[E, A](either: Either[E, A]): EitherOps[E, A] = new EitherOps(either)
   }
 }
 
-private[either] final class EitherOps[+E, +A](either: Either[E, A]) {
+private[either] final class EitherSyntax[A](a: A) {
+  def left[E]: Either[A, E] = Either.left[A, E](a)
+  def right[B]: Either[B, A] = Either.right[B, A](a)
+}
+
+private[either] final class EitherOps[E, A](either: Either[E, A]) {
   def map[B](f: A => B): Either[E, B] = either match {
     case Right(value) => Right(f(value)): Either[E, B]
     case Left(value)  => Left(value): Either[E, B]
