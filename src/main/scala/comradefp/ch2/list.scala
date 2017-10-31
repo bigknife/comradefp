@@ -5,12 +5,16 @@ sealed trait List[+A]
 
 case object Nil extends List[Nothing]
 
-case class Cons[+A](head: A, tail: List[A]) extends List[A]
+case class Cons[+A](head: A, tail: List[A]) extends List[A] {
+  override def toString: String = s"$head :: ${tail.toString}"
+}
 
 object List {
   def apply[A](a: A*): List[A] =
     if (a.isEmpty) Nil
     else Cons(a.head, apply(a.tail: _*))
+
+  def flatten[A](list: List[List[A]]): List[A] = ???
 
   object ops {
     implicit def listOps[A](list: List[A]): ListOps[A] = new ListOps(list)
@@ -41,6 +45,9 @@ private[list] final class ListOps[A](list: List[A]) {
     case Cons(head, tail) => Cons(f(head), tail.map(f))
   }
 
+  def flatMap[B](f: A => List[B]): List[B] =
+    map(f).foldRight(List[B]())((a, acc) => a.append(acc))
+
   def product[B](listB: List[B]): List[(A, B)] = (list, listB) match {
     case (Nil, _)                               => Nil
     case (_, Nil)                               => Nil
@@ -53,5 +60,27 @@ private[list] final class ListOps[A](list: List[A]) {
   def headOption: Option[A] = list match {
     case Nil           => None
     case Cons(head, _) => Some(head)
+  }
+
+  def append(list2: List[A]): List[A] =
+    foldRight(list2)((a, acc) => Cons(a, acc))
+
+  def filter(f: A => Boolean): List[A] =
+    foldRight(List[A]())((a, acc) => if (f(a)) Cons(a, acc) else acc)
+}
+
+object ListOperationSample {
+  def sum(ints: List[Int]): Int = ???
+  def product(ints: List[Double]): Double = ???
+  def append[A](as1: List[A], as2: List[A]) = ???
+  def drop[A](as: List[A], n: Int): List[A] = ???
+
+  object cases {
+    case class Student(name: String, score: Double)
+    val scores = List(
+      Student("zhangsan", 75),
+      Student("lisi", 80),
+      Student("wanger", 86)
+    )
   }
 }
