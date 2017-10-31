@@ -70,8 +70,8 @@ private[list] final class ListOps[A](list: List[A]) {
 }
 
 object ListOperationSample {
-  def sum(ints: List[Int]): Int = ???
-  def product(ints: List[Double]): Double = ???
+  def sum(ints: List[Int]): Int             = ???
+  def product(ints: List[Double]): Double   = ???
   def append[A](as1: List[A], as2: List[A]) = ???
   def drop[A](as: List[A], n: Int): List[A] = ???
 

@@ -20,7 +20,7 @@ object Either {
 }
 
 private[either] final class EitherSyntax[A](a: A) {
-  def left[E]: Either[A, E] = Either.left[A, E](a)
+  def left[E]: Either[A, E]  = Either.left[A, E](a)
   def right[B]: Either[B, A] = Either.right[B, A](a)
 }
 
