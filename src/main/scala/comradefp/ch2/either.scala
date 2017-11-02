@@ -1,4 +1,4 @@
-package ch2.either
+package either
 
 sealed trait Either[+E, +A]
 
@@ -25,25 +25,25 @@ private[either] final class EitherSyntax[A](a: A) {
 }
 
 private[either] final class EitherOps[E, A](either: Either[E, A]) {
-  def map[B](f: A => B): Either[E, B] = either match {
-    case Right(value) => Right(f(value)): Either[E, B]
-    case Left(value)  => Left(value): Either[E, B]
+  def map[B](f: A ⇒ B): Either[E, B] = either match {
+    case Right(value) ⇒ Right(f(value)): Either[E, B]
+    case Left(value)  ⇒ Left(value): Either[E, B]
   }
 
-  def map2[EE >: E, B, C](eitherB: Either[EE, B])(f: (A, B) => C): Either[EE, C] =
+  def map2[EE >: E, B, C](eitherB: Either[EE, B])(f: (A, B) ⇒ C): Either[EE, C] =
     (either, eitherB) match {
-      case (Right(va), Right(vb)) => Right(f(va, vb))
-      case (Left(va), _)          => Either.left[EE, C](va)
-      case (_, Left(vb))          => Either.left[EE, C](vb)
+      case (Right(va), Right(vb)) ⇒ Right(f(va, vb))
+      case (Left(va), _)          ⇒ Either.left[EE, C](va)
+      case (_, Left(vb))          ⇒ Either.left[EE, C](vb)
     }
 
-  def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B] = either match {
-    case Right(value) => f(value)
-    case Left(value)  => Either.left[EE, B](value)
+  def flatMap[EE >: E, B](f: A ⇒ Either[EE, B]): Either[EE, B] = either match {
+    case Right(value) ⇒ f(value)
+    case Left(value)  ⇒ Either.left[EE, B](value)
   }
 
-  def orElse[EE >: E, B >: A](b: => Either[EE, B]): Either[EE, B] = either match {
-    case Left(_) => b
-    case x       => x
+  def orElse[EE >: E, B >: A](b: ⇒ Either[EE, B]): Either[EE, B] = either match {
+    case Left(_) ⇒ b
+    case x       ⇒ x
   }
 }

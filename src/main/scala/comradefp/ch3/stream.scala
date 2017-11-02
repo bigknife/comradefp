@@ -1,4 +1,4 @@
-package ch3.stream
+package stream
 
 sealed trait Stream[+A]
 

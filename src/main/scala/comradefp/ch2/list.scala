@@ -1,5 +1,5 @@
-package ch2.list
-import ch2.option._
+package list
+import option._
 
 sealed trait List[+A]
 
@@ -24,49 +24,49 @@ object List {
 private[list] final class ListOps[A](list: List[A]) {
   import List.ops._
 
-  def foldRightAsPrimary[B](z: B)(f: (A, B) => B): B = list match {
-    case Nil              => z
-    case Cons(head, tail) => f(head, tail.foldRightAsPrimary(z)(f))
+  def foldRightAsPrimary[B](z: B)(f: (A, B) ⇒ B): B = list match {
+    case Nil              ⇒ z
+    case Cons(head, tail) ⇒ f(head, tail.foldRightAsPrimary(z)(f))
   }
 
-  def foldRightViaFoldLeft[B](z: B)(f: (A, B) => B): B =
-    foldLeft((x: B) => x)((accF, a) => b => accF(f(a, b)))(z)
+  def foldRightViaFoldLeft[B](z: B)(f: (A, B) ⇒ B): B =
+    foldLeft((x: B) ⇒ x)((accF, a) ⇒ b ⇒ accF(f(a, b)))(z)
 
-  def foldRight[B](z: B)(f: (A, B) => B): B = foldRightViaFoldLeft(z)(f)
+  def foldRight[B](z: B)(f: (A, B) ⇒ B): B = foldRightViaFoldLeft(z)(f)
 
   @annotation.tailrec
-  def foldLeft[B](z: B)(f: (B, A) => B): B = list match {
-    case Nil              => z
-    case Cons(head, tail) => tail.foldLeft(f(z, head))(f)
+  def foldLeft[B](z: B)(f: (B, A) ⇒ B): B = list match {
+    case Nil              ⇒ z
+    case Cons(head, tail) ⇒ tail.foldLeft(f(z, head))(f)
   }
 
-  def map[B](f: A => B): List[B] = list match {
-    case Nil              => Nil
-    case Cons(head, tail) => Cons(f(head), tail.map(f))
+  def map[B](f: A ⇒ B): List[B] = list match {
+    case Nil              ⇒ Nil
+    case Cons(head, tail) ⇒ Cons(f(head), tail.map(f))
   }
 
-  def flatMap[B](f: A => List[B]): List[B] =
-    map(f).foldRight(List[B]())((a, acc) => a.append(acc))
+  def flatMap[B](f: A ⇒ List[B]): List[B] =
+    map(f).foldRight(List[B]())((a, acc) ⇒ a.append(acc))
 
   def product[B](listB: List[B]): List[(A, B)] = (list, listB) match {
-    case (Nil, _)                               => Nil
-    case (_, Nil)                               => Nil
-    case (Cons(head, tail), Cons(headB, tailB)) => Cons((head, headB), tail.product(tailB))
+    case (Nil, _)                               ⇒ Nil
+    case (_, Nil)                               ⇒ Nil
+    case (Cons(head, tail), Cons(headB, tailB)) ⇒ Cons((head, headB), tail.product(tailB))
   }
 
-  def map2[B, C](listB: List[B])(f: (A, B) => C): List[C] =
-    product(listB).map(x => f(x._1, x._2))
+  def map2[B, C](listB: List[B])(f: (A, B) ⇒ C): List[C] =
+    product(listB).map(x ⇒ f(x._1, x._2))
 
   def headOption: Option[A] = list match {
-    case Nil           => None
-    case Cons(head, _) => Some(head)
+    case Nil           ⇒ None
+    case Cons(head, _) ⇒ Some(head)
   }
 
   def append(list2: List[A]): List[A] =
-    foldRight(list2)((a, acc) => Cons(a, acc))
+    foldRight(list2)((a, acc) ⇒ Cons(a, acc))
 
-  def filter(f: A => Boolean): List[A] =
-    foldRight(List[A]())((a, acc) => if (f(a)) Cons(a, acc) else acc)
+  def filter(f: A ⇒ Boolean): List[A] =
+    foldRight(List[A]())((a, acc) ⇒ if (f(a)) Cons(a, acc) else acc)
 }
 
 object ListOperationSample {
