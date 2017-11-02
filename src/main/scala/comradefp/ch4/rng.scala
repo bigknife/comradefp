@@ -21,7 +21,7 @@ object RNG {
 
   object Rand {
     import State._, ops._
-
+    def unit[A](a: => A): Rand[A] = State.unit(a)
     val int: Rand[Int] = State(_.nextInt)
     val double: Rand[Double] = int.map(_.toDouble / Double.MaxValue)
     val nonNegotiateInt: Rand[Int] = int.map {x =>

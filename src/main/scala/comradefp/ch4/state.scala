@@ -4,7 +4,7 @@ final case class State[S, A](run: S => (A, S))
 
 object State {
 
-  def unit[S, A](a: A): State[S, A] = State { s ⇒
+  def unit[S, A](a: => A): State[S, A] = State { s ⇒
     (a, s)
   }
 
