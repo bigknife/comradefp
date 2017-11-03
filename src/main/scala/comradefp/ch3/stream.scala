@@ -85,6 +85,9 @@ private[stream] final class StreamOps[A](stream: Stream[A]) {
   def headOption: Option[A] =
     foldRight(None: Option[A])((a, acc) => Some(a))
 
+  def find(p: A ⇒ Boolean): Option[A] =
+    foldRight(None: Option[A])((a, acc) ⇒ if(p(a)) Some(a) else acc)
+
   def zip[B](streamB: Stream[B]): Stream[(A, B)] = map2(streamB)((_, _))
 
   def take(n: Int): Stream[A] = stream match {
