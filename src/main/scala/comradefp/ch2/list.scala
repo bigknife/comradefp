@@ -14,6 +14,18 @@ object List {
     if (a.isEmpty) Nil
     else Cons(a.head, apply(a.tail: _*))
 
+  def empty[A]: List[A] = Nil
+
+  def fill[A](n: Int, a: A): List[A] = {
+    @annotation.tailrec
+    def go(n: Int, acc: List[A]): List[A] =
+      if (n == 0) acc
+      else go(n - 1, Cons(a, acc))
+
+    if (n <= 0) empty[A]
+    else go(n, empty[A])
+  }
+
   def flatten[A](list: List[List[A]]): List[A] = ???
 
   object ops {
